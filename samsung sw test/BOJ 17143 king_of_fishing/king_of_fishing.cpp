@@ -169,7 +169,7 @@ public:
 
 bool cmp(const Shark &a, const Shark &b)
 {
-    return a.size > b.size;
+    return a.size > b.size; // 내림차순 ,  < 를 사용하면 오름차순
 }
 
 vector<Shark> sharks;
