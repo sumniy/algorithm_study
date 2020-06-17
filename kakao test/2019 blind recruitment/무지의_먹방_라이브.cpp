@@ -17,9 +17,14 @@ public:
     }
 };
 
+bool cmp(food a, food b)
+{
+    return a.init_index < b.init_index;
+}
+
 int solution(vector<int> food_times, long long k) {
     int answer = 0;
-    int sum = 0;
+    long long sum = 0;
     
     deque<food> foods;
     int size = food_times.size();
@@ -36,36 +41,30 @@ int solution(vector<int> food_times, long long k) {
     
     sort(foods.begin(), foods.end());
     
-    int cnt = 0;
-    int min_value = 0;
+    long long cnt = 0;
+    long long min_value = 0;
     while(!foods.empty()){
         
-        min_value = foods[0].times;
-        size = foods.size();
-        cnt = min_value * size;
-        cout<<"min_value = "<<min_value<<", size = "<<size<<", cnt = "<<cnt<<", k = "<<k<<endl;
         
-        if(cnt > k)
+        size = foods.size();
+        cnt = (foods[0].times-min_value) * size;
+        min_value = foods[0].times;
+        
+        if(cnt >= k)
         {
             
             answer = k % size;
-            cout<<"Find => answer = "<<answer<<", index = "<<foods[answer].init_index<<endl;
-            cout<<foods[2].init_index<<endl;
             break;
         }
         else
         {
             k -= cnt;
             foods.pop_front();
-            for(auto& food : foods)
-            {
-                food.times -= min_value;
-            }
         }
         
     }
-    if(foods.empty()) return -1;
     
+    sort(foods.begin(), foods.end(), cmp);
     answer = foods[answer].init_index;
     
     return answer+1;
