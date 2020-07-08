@@ -1,3 +1,3 @@
-node;
-        
-        // curr->next = new_node;
+
+    // new_node->value = value;
+    // new_node->next = (Node*)nullptr;
