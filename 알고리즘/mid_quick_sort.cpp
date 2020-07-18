@@ -1,35 +1,37 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
-void QuickSort(vector<int>& data, int start, int end)
+void QuickSort(vector<int> &data, int start, int end)
 {
-  if(start >= end)
+  if (start >= end)
   {
     return;
   }
 
-  int mid = (start + end)/2;
+  int mid = (start + end) / 2;
   int pivot = data[mid];
   swap(data[start], data[mid]);
 
   int i = start + 1, j = end;
   int temp;
 
-  while(i <= j)
+  while (i <= j)
   {
-    while(i <= end && data[i] >= pivot)
+    while (i <= end && data[i] <= pivot)
     {
       ++i;
     }
-    while(j > start && data[j] <= pivot)
+    while (j > start && data[j] >= pivot)
     {
       --j;
     }
 
-    if(i > j)
+    if (i > j)
     {
       swap(data[start], data[j]);
     }
@@ -38,23 +40,37 @@ void QuickSort(vector<int>& data, int start, int end)
       swap(data[i], data[j]);
     }
   }
-  
-  QuickSort(data, start, j-1);
-  QuickSort(data, j+1, end);
+
+  QuickSort(data, start, j - 1);
+  QuickSort(data, j + 1, end);
 }
 
+const int INPUT_SIZE = 10000;
+const int MAX_ELEM = 999999;
+#define endl "\n"
 
 int main()
 {
-  vector<int> array = {1, 3, 6, 5, 4, 7, 8, 9, 2, 10};
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
+  cout.tie(NULL);
 
-  for(auto i : array)
-    cout<<i<<" ";
-  cout<<endl;
+  vector<int> array;
 
-  QuickSort(array, 0, array.size()-1);
+  srand(11);
 
-  for(auto i : array)
-    cout<<i<<" ";
-  cout<<endl;
+  for (int i = 0; i < INPUT_SIZE; i++)
+  {
+    array.push_back(rand() % MAX_ELEM);
+  }
+
+  for (auto i : array)
+    cout << i << " ";
+  cout << endl;
+
+  QuickSort(array, 0, array.size() - 1);
+
+  for (auto i : array)
+    cout << i << " ";
+  cout << endl;
 }

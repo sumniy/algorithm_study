@@ -157,6 +157,7 @@ public:
     while(curr != nullptr)
     {
       if(curr->key == key) return true;
+      curr = curr->next;
     }
   
     return false;
