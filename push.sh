@@ -8,7 +8,7 @@ git add .
 
 echo "> add all files"
 
-if [ $# = 1 ]; then
+if [ $# = 0 ]; then
   read COMMIT_MESSAGE
 else 
   COMMIT_MESSAGE={$1}
