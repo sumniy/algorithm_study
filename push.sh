@@ -9,12 +9,11 @@ git add .
 echo "> add all files"
 
 if [ $# = 0 ]; then
-  read COMMIT_MESSAGE
+  read -p "> enter commit message : " COMMIT_MESSAGE
 else 
-  COMMIT_MESSAGE={$1}
+  COMMIT_MESSAGE=${1}
 fi
 
-COMMIT_MESSAGE=${1}
 git commit -m "${COMMIT_MESSAGE}"
 
 echo "> commit complte"
