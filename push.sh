@@ -28,13 +28,11 @@ git commit -m "${COMMIT_MESSAGE}"
 
 echo "> commit complte"
 
-# git push ${REMOTE_REPO} moster
 git push ${REMOTE_REPO} HEAD:${WORKING_BRANCH}
 
 if [ $? = 0 ]; then
   echo "> push complete to remote:${REMOTE_REPO} branch:${WORKING_BRANCH}"
 else
+  git reset --soft HEAD^
   echo "> push faild. please check the git error message."
 fi
-
-# echo "> push complete to remote:${REMOTE_REPO} branch:${WORKING_BRANCH}"
