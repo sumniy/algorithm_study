@@ -1,12 +1,10 @@
 #!/usr/bin/env sh
 
 
-REMOTE_REPO=$(git remote)
+git remote show origin
 
-echo "$REMOTE_REPO"
-
-echo "$(git remote show $REMOTE_REPO)"
-
-BRANCH=$(git branch)
-
-echo "$BRANCH"
+if [ $? = 0 ]; then
+  echo "> remote show success"
+else
+  echo "> remote show failed"
+fi
