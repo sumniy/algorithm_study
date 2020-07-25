@@ -31,7 +31,7 @@ echo "> commit complte"
 git push ${REMOTE_REPO} HEAD:${WORKING_BRANCH}
 
 if [ $? = 0 ]; then
-  echo "> push complete to remote:${REMOTE_REPO} branch:${WORKING_BRANCH}""
+  echo "> push complete to remote:${REMOTE_REPO} branch:${WORKING_BRANCH}"
 else
   echo "> push faild. please check the git error message."
 fi
