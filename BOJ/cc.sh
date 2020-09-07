@@ -1,31 +1,38 @@
 #!/usr/bin/env sh
 
-REMOTE_REPO=$(git remote)
-WORKING_BRANCH=$(git branch --show-current)
+PATH=$(pwd)
+TARGET_DIR=$PATH${1}
 
-git pull ${REMOTE_REPO} ${WORKING_BRANCH}
+echo ${TARGET_DIR}
 
-echo "> pull complete from remote:${REMOTE_REPO} branch:${WORKING_BRANCH}"
 
-git add .
 
-echo "> add all files"
+# REMOTE_REPO=$(git remote)
+# WORKING_BRANCH=$(git branch --show-current)
 
-if [ $# -eq 0 ]; then
-  read -p "> enter commit message : " COMMIT_MESSAGE
-else 
-  COMMIT_MESSAGE=${1}
-fi
+# git pull ${REMOTE_REPO} ${WORKING_BRANCH}
 
-git commit -m "${COMMIT_MESSAGE}"
+# echo "> pull complete from remote:${REMOTE_REPO} branch:${WORKING_BRANCH}"
 
-echo "> commit complte"
+# git add .
 
-git push ${REMOTE_REPO} HEAD:${WORKING_BRANCH}
+# echo "> add all files"
 
-if [ $? = 0 ]; then
-  echo "> push complete to remote:${REMOTE_REPO} branch:${WORKING_BRANCH}"
-else
-  git reset --soft HEAD^
-  echo "> push faild. please check the git error message."
-fi
+# if [ $# -eq 0 ]; then
+#   read -p "> enter commit message : " COMMIT_MESSAGE
+# else 
+#   COMMIT_MESSAGE=${1}
+# fi
+
+# git commit -m "${COMMIT_MESSAGE}"
+
+# echo "> commit complte"
+
+# git push ${REMOTE_REPO} HEAD:${WORKING_BRANCH}
+
+# if [ $? = 0 ]; then
+#   echo "> push complete to remote:${REMOTE_REPO} branch:${WORKING_BRANCH}"
+# else
+#   git reset --soft HEAD^
+#   echo "> push faild. please check the git error message."
+# fi
