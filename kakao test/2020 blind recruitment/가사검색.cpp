@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -12,112 +13,104 @@ using namespace std;
 
 #define TRIESIZE 26
 
-class Trie
+class Node
 {
 public:
-    Trie *nextnode[TRIESIZE];
-    bool finish;
-    bool next;
-
-    Trie()
+    Node *next[TRIESIZE];
+    int cnt;
+    Node()
     {
+        cnt = 0;
         for (int i = 0; i < TRIESIZE; i++)
         {
-            nextnode[i] = nullptr;
-        }
-        finish = false;
-        next = false;
-    }
-
-    ~Trie()
-    {
-        for (int i = 0; i < TRIESIZE; i++)
-        {
-            delete (nextnode[i]);
-        }
-    }
-
-    void insert(const char *c)
-    {
-        if (*c == '\0')
-        {
-            finish = true;
-            return;
-        }
-
-        int index = *c - 'a';
-        if (nextnode[index] == nullptr)
-        {
-            nextnode[index] = new Trie;
-        }
-        next = true;
-
-        nextnode[index]->insert(c + 1);
-    }
-
-    int find(const char *c)
-    {
-        int ret = 0;
-
-        if (next == false)
-            return 0;
-
-        if (*c == '\0')
-        {
-            if (finish == true)
-                return 1;
-            else
-                return 0;
-        }
-
-        if (*c == '?')
-        {
-            for (int i = 0; i < TRIESIZE; i++)
-            {
-                if (nextnode[i] != nullptr)
-                {
-                    ret += nextnode[i]->find(c + 1);
-                }
-            }
-            return ret;
-        }
-        else
-        {
-            int index = *c - 'a';
-            if (nextnode[index] == nullptr)
-            {
-                return 0;
-            }
-            return ret + nextnode[index]->find(c + 1);
+            next[i] = NULL;
         }
     }
 };
+
+class Trie
+{
+public:
+    Node *head;
+    int word_cnt;
+
+    void insert(string word)
+    {
+        word_cnt++;
+        Node *curr = head;
+
+        for (char c : word)
+        {
+            c = c - 'a';
+            if (curr->next[c] == NULL)
+            {
+                Node *temp = new Node();
+                curr->next[c] = temp;
+            }
+            curr = curr->next[c];
+            curr->cnt++;
+        }
+    }
+
+    int find(string query)
+    {
+        if(query[0] == '?') return word_cnt;
+        Node *curr = head;
+
+        int cnt = 0;
+        for (char c : query)
+        {
+            if (c == '?')
+                return cnt;
+            c = c - 'a';
+            if (curr->next[c] == NULL)
+            {
+                return 0;
+            }
+            curr = curr->next[c];
+            cnt = curr->cnt;
+        }
+        return 0;
+    }
+
+    Trie()
+    {
+        Node *temp = new Node();
+        head = temp;
+        word_cnt = 0;
+    }
+};
+
+Trie tries[10001];
+Trie triesR[10001];
 
 vector<int> solution(vector<string> words, vector<string> queries)
 {
     vector<int> answer;
 
-    Trie trie;
-    for (int i = 0; i < words.size(); i++)
+    for (auto word : words)
     {
-        const char ptr = words[i].c_str();
-        trie.insert(ptr);
+        int size = word.size();
+
+        tries[size].insert(word);
+
+        reverse(word.begin(), word.end());
+
+        triesR[size].insert(word);
     }
 
-    const char *p = words[0][0];
-    while (*p != '\0')
+    for (auto query : queries)
     {
-        cout << p;
-        p++;
-    }
-    cout << endl;
-
-    int cnt;
-    for (int i = 0; i < queries.size(); i++)
-    {
-        const char *ptr = queries[i].c_str();
-        cnt = trie.find(ptr);
-        answer.push_back(cnt);
+        int size = query.size();
+        if (query[0] == '?')
+        {
+            reverse(query.begin(), query.end());
+            answer.push_back(triesR[size].find(query));
+        }
+        else
+        {
+            answer.push_back(tries[size].find(query));
+        }
     }
 
     return answer;
