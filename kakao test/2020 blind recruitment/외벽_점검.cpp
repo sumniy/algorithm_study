@@ -1,48 +1,45 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iostream>
+#include <deque>
 
 using namespace std;
 
-bool repaired[201] = {false, };
-int weak_size;
-
-int repair(vector<int>& weak, vector<int>& dist,int n, int repaired_num ,int friends)
+int solution(int n, vector<int> weak, vector<int> dist)
 {
-    if(friends >= dist.size()) return 99999;
-    if(repaired_num == weak_size)
-    {
-        return friends;
-    }
-    
-    int ret = 99999;
-    
-    for(int i=0;i<dist.size();i++)
-    {
-        int distance = dist[i];
+    vector<int> save(dist);
+    sort(dist.begin(), dist.end());
+    deque<int> weak_point(weak.begin(), weak.end());
+    int weak_size = weak.size();
+    int min = 1001;
 
-        for(int j=0;j<weak_size;j++)
+    for (int i = 0; i < n; i++)
+    {
+        do
         {
-            // 시계 방향
-            int idx = weak[j];
-            
-            while(distance >= 0)
+            int weak_index = 0;
+            int cnt = 0;
+            for (int distance : dist)
             {
-                if(repaired[idx] == false)
-                {
-                    repaired[idx] = true;
-                }
+                cnt++;
+                int end = weak_point[weak_index] + distance;
+
+                while (weak_index++ < weak_size && weak_point[weak_index] <= end){};
+
+                if (weak_index >= weak_size)
+                    break;
             }
+            if (weak_index < weak_size)
+                cnt = 1001;
+            else if (min > cnt)
+                min = cnt;
+        } while (next_permutation(dist.begin(), dist.end()));
+        dist = save;
 
-        }
+        weak_point.push_back(weak_point.front()+n);
+        weak_point.pop_front();
     }
-}
 
-
-int solution(int n, vector<int> weak, vector<int> dist) {
-    int answer = 0;
-    weak_size = weak.size();
-    sort(dist.begin(), dist.end(), less<int>());
-    return answer;
+    if (min == 1001) min = -1;
+    return min;
 }
