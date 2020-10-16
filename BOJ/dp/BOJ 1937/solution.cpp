@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <string>
-#include <queue>
+#include <algorithm>
 
 using namespace std;
 #define endl "\n"
@@ -11,44 +10,38 @@ int dy[4] = {-1, 0, 1, 0};
 int dx[4] = {0, 1, 0, -1};
 vector<vector<int>> dp;
 
+int dfs(vector<vector<int>> &board, int y, int x)
+{
+  if (dp[y][x] == -1)
+  {
+    dp[y][x] = 1;
+    int max_cnt = 0;
 
-class Point {
-public:
-  int value;
-  int y;
-  int x;
-  Point(int v, int y2, int x2) {
-    value = v;
-    y = y2;
-    x = x2;
+    for (int dir = 0; dir < 4; dir++)
+    {
+      int ny = y + dy[dir];
+      int nx = x + dx[dir];
+
+      if (ny < 0 || ny >= n || nx < 0 || nx >= n || board[ny][nx] <= board[y][x])
+        continue;
+
+      max_cnt = max(max_cnt, dfs(board, ny, nx));
+    }
+    dp[y][x] += max_cnt;
   }
-};
+  return dp[y][x];
+}
 
-struct cmp {
-  bool operator()(Point& a, Point& b) {
-    return a.value > b.value;
-  }
-};
-
-int getMaxCnt(vector<vector<int>> &board, priority_queue<Point, vector<Point>, cmp>& pq)
+int getMaxCnt(vector<vector<int>> &board)
 {
   int max_cnt = 0;
 
-  while(!pq.empty()) {
-    Point curr = pq.top();
-    pq.pop();
-
-    for(int dir=0;dir<4;dir++) {
-      int ny = curr.y + dy[dir];
-      int nx = curr.x + dx[dir];
-
-      if(ny >= 0 && ny < n && nx >= 0 && nx < n && board[ny][nx] > curr.value) {
-        if(dp[ny][nx] < dp[curr.y][curr.x] + 1) dp[ny][nx] = dp[curr.y][curr.x] + 1;
-      }
+  for (int y = 0; y < n; y++)
+  {
+    for (int x = 0; x < n; x++)
+    {
+      max_cnt = max(max_cnt, dfs(board, y, x));
     }
-
-    if(dp[curr.y][curr.x] > max_cnt) max_cnt = dp[curr.y][curr.x];
-
   }
 
   return max_cnt;
@@ -63,19 +56,18 @@ int main()
 
   cin >> n;
 
-  priority_queue<Point, vector<Point>, cmp> pq;
   vector<vector<int>> board(n, vector<int>(n, 0));
-
-  for(int y=0;y<n;y++) {
-    for(int x=0;x<n;x++) {
-      cin >> board[y][x];
-      pq.push(Point(board[y][x], y, x));
+  for (auto &row : board)
+  {
+    for (auto &col : row)
+    {
+      cin >> col;
     }
   }
 
-  dp.assign(n, vector<int>(n, 1));
+  dp.assign(n, vector<int>(n, -1));
 
-  cout << getMaxCnt(board, pq)<<endl;
+  cout << getMaxCnt(board);
 
   return 0;
 }
